@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="theme-color" content="#2A2522">
+<meta name="robots" content="noindex">
+<title>Compartimos · Escenika Microteatro</title>
+<link rel="icon" type="image/png" href="https://panel.escenikamicroteatro.com/marca/favicon-64.png">
+<!--
+  🫧 COMPARTIMOS · página de entrada de compartimos.escenikamicroteatro.com (la del QR)
+  ─────────────────────────────────────────────────────────────────────────────────────
+  Este archivo NO va en Apps Script: se sube a un repositorio de GitHub Pages propio
+  (por ejemplo «escenika-compartimos») junto con el archivo CNAME.
+  Pide la página pública a la Web App del panel (92_Compartimos › paginaCompartir_) y la muestra.
+  Si cambia la URL /exec de la Web App, cámbiala aquí también (es la misma que en el index.html del panel).
+-->
+<script>
+  var ESCENIKA_API = "https://script.google.com/macros/s/AKfycbxpz_qancQQRnDQd6huykOIWCXt_Sh3z1QjiHPwd335pq5sfDtmAfNEv7g-jyXCLMwpuw/exec";
+</script>
+<style>
+  html,body{margin:0;min-height:100%;background:#2A2522;color:#fff;font:16px/1.5 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif}
+  .c{min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;text-align:center;padding:24px}
+  .t{font:800 34px/1 "Arial Narrow",Arial,sans-serif;letter-spacing:.5px} .t b{color:#14A3A3}
+  .giro{width:26px;height:26px;border:3px solid rgba(255,255,255,.2);border-top-color:#14A3A3;border-radius:50%;animation:g 1s linear infinite}
+  @keyframes g{to{transform:rotate(360deg)}}
+  .aviso{background:#fff;color:#A3201D;border-radius:12px;padding:12px 16px;max-width:380px;font-size:15px}
+  button{border:0;border-radius:10px;padding:12px 18px;font-family:inherit;font-weight:700;font-size:16px;background:#fff;color:#2A2522;cursor:pointer}
+</style>
+</head>
+<body>
+<div class="c" id="c"><div class="t">compart<b>imos</b></div><div class="giro" aria-label="Cargando"></div></div>
+<script>
+(function () {
+  function post(datos) {
+    return fetch(ESCENIKA_API, { method: "POST", redirect: "follow", headers: { "Content-Type": "text/plain;charset=utf-8" }, body: JSON.stringify(datos) })
+      .then(function (r) { return r.text(); })
+      .then(function (t) { try { return JSON.parse(t); } catch (e) { throw new Error("Respuesta no válida del servidor"); } });
+  }
+  // Sustituto de google.script.run: la página pública llama a sus funciones a través de doPost
+  function instalarPuente() {
+    window.google = window.google || {};
+    var nuevo = function () {
+      var ok = function () {}, ko = function (e) { console.error(e); };
+      var base = { withSuccessHandler: function (f) { ok = f; return px; }, withFailureHandler: function (f) { ko = f; return px; } };
+      var px = new Proxy(base, { get: function (t, k) {
+        if (k in t) return t[k];
+        return function () {
+          var args = [].slice.call(arguments);
+          post({ tipo: "run", fn: String(k), args: args })
+            .then(function (r) { if (!r.ok) throw new Error(r.error || "Error"); ok(r.r); })
+            .catch(function (e) { ko(e); });
+        };
+      } });
+      return px;
+    };
+    var script = { host: { close: function () {}, setHeight: function () {}, setWidth: function () {} } };
+    Object.defineProperty(script, "run", { get: nuevo });
+    window.google.script = script;
+  }
+  function fallo() {
+    document.getElementById("c").innerHTML = '<div class="t">compart<b>imos</b></div><div class="aviso">No hemos podido cargar la página. Comprueba la conexión.</div><button onclick="location.reload()">Volver a intentarlo</button>';
+  }
+  post({ tipo: "pagina", p: { accion: "compartir" } }).then(function (r) {
+    if (!r.ok) return fallo();
+    instalarPuente();
+    document.open(); document.write(r.html); document.close();
+    document.title = "Compartimos · Escenika Microteatro";
+  }, fallo);
+})();
+</script>
+</body>
+</html>

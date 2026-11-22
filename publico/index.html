@@ -31,7 +31,7 @@
 </style>
 </head>
 <body>
-<div class="c" id="c"><img class="logo" src="https://panel.escenikamicroteatro.com/marca/escenika-blanco.png" alt="escenika" onerror="this.outerHTML='&lt;div class=&quot;lt&quot;&gt;escen&lt;i&gt;ika&lt;/i&gt;&lt;/div&gt;'"><div class="t"><i>COMP</i>ART<b>IMOS</b></div><div class="giro" aria-label="Cargando"></div></div>
+<div class="c" id="c"><img class="logo" src="https://panel.escenikamicroteatro.com/marca/escenika-blanco.png" alt="escenika" onerror="this.outerHTML='&lt;div class=&quot;lt&quot;&gt;escen&lt;i&gt;ika&lt;/i&gt;&lt;/div&gt;'"><div class="t"><i>COMP</i>ART<b>IMOS</b></div><div class="giro" aria-label="Cargando · Kargatzen"></div></div>
 <script>
 (function () {
   function post(datos) {
@@ -61,7 +61,7 @@
     window.google.script = script;
   }
   function fallo() {
-    document.getElementById("c").innerHTML = '<img class="logo" src="https://panel.escenikamicroteatro.com/marca/escenika-blanco.png" alt="escenika"><div class="t"><i>COMP</i>ART<b>IMOS</b></div><div class="aviso">No hemos podido cargar la página. Comprueba la conexión.</div><button onclick="location.reload()">Volver a intentarlo</button>';
+    document.getElementById("c").innerHTML = '<img class="logo" src="https://panel.escenikamicroteatro.com/marca/escenika-blanco.png" alt="escenika"><div class="t"><i>COMP</i>ART<b>IMOS</b></div><div class="aviso">No hemos podido cargar la página. Comprueba la conexión.<br><span lang="eu">Ezin izan dugu orrialdea kargatu. Egiaztatu konexioa.</span></div><button onclick="location.reload()">Volver a intentarlo · <span lang="eu">Saiatu berriro</span></button>';
   }
   post({ tipo: "pagina", p: { accion: "compartir", vista: "pantalla" } }).then(function (r) {
     if (!r.ok) return fallo();
